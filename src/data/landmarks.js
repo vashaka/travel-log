@@ -32,6 +32,23 @@ export const landmarks = [
     latitude: 42.025865,
     longitude: 43.106461,
   },
+  {
+    id: "4",
+    place: "Mskheta",
+    image:
+      "https://www.journalofnomads.com/wp-content/uploads/2019/03/Overlooking-Mtsketha.jpg",
+    images: [
+      "https://www.journalofnomads.com/wp-content/uploads/2019/03/Overlooking-Mtsketha.jpg",
+      "https://www.journalofnomads.com/wp-content/uploads/2019/03/Overlooking-Mtsketha.jpg",
+      "https://www.journalofnomads.com/wp-content/uploads/2019/03/Overlooking-Mtsketha.jpg",
+      "https://www.journalofnomads.com/wp-content/uploads/2019/03/Overlooking-Mtsketha.jpg",
+      "https://www.journalofnomads.com/wp-content/uploads/2019/03/Overlooking-Mtsketha.jpg",
+    ],
+    description:
+      "If you prefer to visit Mtskheta independently, it's a 30-minute drive from Tbilisi. You can easily hitchhike there from the Tbilisi Mall (take minibus nr. 50 to get there) or take a minibus (mashrutka) all the way to Mtskheta for only 1 GEL. Here's a very detailed guide on how to go from Tbilisi to Mtskheta.",
+    latitude: 41.84514,
+    longitude: 44.71875,
+  },
 
   // {
   //   id: "4",

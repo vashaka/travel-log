@@ -41,17 +41,17 @@ var greenIcon = new L.Icon({
 const MapL = ({ logs }: { logs: Log[] }) => {
   const { position, zoom }: any = useThemeContext();
 
-  function MyComponent({
+  const MyComponent = ({
     coords,
     _zoom,
   }: {
     coords: LatLngTuple;
     _zoom: number;
-  }) {
+  }) => {
     const map = useMap();
     map.setView(coords, _zoom, { animate: true, duration: 1.0 });
     return null;
-  }
+  };
 
   const [landmarksToSee, setLandmarksToSee] = useState<any[]>([]);
 
