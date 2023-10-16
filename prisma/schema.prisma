@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Log {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  place String
+  latitude String
+  longitude String
+  image String
+  visitDate String
+  expression String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LandmarkToSee {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  place String
+  latitude String
+  longitude String
+  image String
+  distancefromcaptial String
+  description String
+  allreadySeen Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
