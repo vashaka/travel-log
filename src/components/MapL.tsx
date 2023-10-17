@@ -31,7 +31,8 @@ let DefaultIcon = L.icon({
 });
 
 const MapL = ({ logs }: { logs: Log[] }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [immediate, setImmediate] = React.useState(false);
+  const [_isOpen, _setIsOpen] = React.useState(false);
   const { position, zoom }: any = useThemeContext();
 
   const MyComponent = ({
@@ -93,20 +94,34 @@ const MapL = ({ logs }: { logs: Log[] }) => {
         ))}
       </MapContainer>
 
-      {isOpen ? (
-        <div className="absolute right-0 top-0 z-[999] w-[400px] h-screen bg-black">
-          <LogForm onClose={() => setIsOpen(false)} />
-        </div>
-      ) : (
-        <div className="drawer-content" onClick={() => setIsOpen(true)}>
-          <label
-            className="btn absolute top-2 right-2 z-[997] capitalize text-gray-300"
-            htmlFor="my-drawer"
-          >
-            Add New Logs
-          </label>
+      {_isOpen && (
+        <div
+          className={`absolute right-0 top-0 z-[999] sm:w-[400px] w-[300px] h-full overflow-y-auto ${
+            immediate ? "card-close" : "card-open"
+          }`}
+        >
+          <LogForm
+            onClose={() => {
+              setImmediate(false);
+              setTimeout(() => {
+                _setIsOpen(false);
+              }, 500);
+            }}
+          />
         </div>
       )}
+
+      <div
+        className="drawer-content"
+        onClick={() => {
+          setImmediate(true);
+          _setIsOpen(true);
+        }}
+      >
+        <label className="btn absolute top-2 right-2 z-[997] capitalize text-gray-300">
+          Add New Logs
+        </label>
+      </div>
     </div>
   );
 };

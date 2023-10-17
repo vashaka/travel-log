@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const labelText = "ml-1 text-md text-[#ededed] duration-300";
+const labelText = "ml-1 text-base text-[#ededed] duration-300";
 const inputClassName =
   "mt-1 py-2 px-2 rounded-lg w-[90%] text-white border border-[#ededed] bg-transparent focus:outline-none duration-300";
 
@@ -42,8 +42,8 @@ const LogForm = ({ onClose }: { onClose: any }) => {
   };
 
   return (
-    <form className="bg-black h-[100vh] text-white">
-      <div className="absolute right-3 top-5">
+    <form className="bg-black sm:h-[100vh] h-[110vh]  text-white">
+      <div className="absolute right-4 top-5 duration-300 hover:rotate-90">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -60,7 +60,7 @@ const LogForm = ({ onClose }: { onClose: any }) => {
           />
         </svg>
       </div>
-      <h1 className="text-2xl text-center font-semibold pt-4">
+      <h1 className="sm:text-2xl text-xl text-center font-semibold pt-4">
         Type the Destination
       </h1>
       <div className="flex items-center flex-col mt-2">
@@ -124,7 +124,9 @@ const LogForm = ({ onClose }: { onClose: any }) => {
 
       <div className="flex items-center flex-col mt-4">
         <div className="w-[90%] duration-300">
-          <label className={labelText}>
+          <label
+            className={`ml-1 md:text-base text-[#ededed] duration-300 text-xs`}
+          >
             Expressions (Tell us about your Expressions)
           </label>
         </div>

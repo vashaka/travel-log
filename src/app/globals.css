@@ -75,6 +75,34 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
+  }
+}
+
+.card-close {
+  animation-name: example;
+  animation-duration: 0.5s;
+}
+
+.card-open {
+  animation-name: example2;
+  animation-duration: 0.5s;
+}
+
+@keyframes example {
+  from {
+    margin-right: -400px;
+  }
+  to {
+    margin-right: 0px;
+  }
+}
+
+@keyframes example2 {
+  from {
+    margin-right: 0px;
+  }
+  to {
+    margin-right: -400px;
   }
 }
