@@ -1,6 +1,16 @@
+// var greenIcon = new L.Icon({
+//   iconUrl:
+//     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+//   shadowUrl:
+//     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+//   iconSize: [25, 41],
+//   iconAnchor: [12, 41],
+//   shadowSize: [41, 41],
+// });
+// L.Marker.prototype.options.icon = DefaultIcon;
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "leaflet/dist/leaflet.css";
 
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
@@ -10,17 +20,8 @@ import L, { LatLngTuple } from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import { Log } from "@/models/Log";
-import { landmarks } from "@/data/landmarks";
 import { useThemeContext } from "@/context/store";
-
-// const colorMode = "light";
-
-// const colorModeUrl = [
-//   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-//   "mapbox://styles/petherem/cl2hdvc6r003114n2jgmmdr24",
-// ];
-// const position = [42.3207845, 43.3713615];
-// L.Marker.prototype.options.icon = DefaultIcon;
+import LogForm from "./LogForm";
 
 let DefaultIcon = L.icon({
   iconUrl: icon.src,
@@ -28,17 +29,9 @@ let DefaultIcon = L.icon({
   iconSize: [25, 41],
   iconAnchor: [25 / 2, 41],
 });
-var greenIcon = new L.Icon({
-  iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  shadowSize: [41, 41],
-});
 
 const MapL = ({ logs }: { logs: Log[] }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const { position, zoom }: any = useThemeContext();
 
   const MyComponent = ({
@@ -53,21 +46,6 @@ const MapL = ({ logs }: { logs: Log[] }) => {
     return null;
   };
 
-  const [landmarksToSee, setLandmarksToSee] = useState<any[]>([]);
-
-  useEffect(() => {
-    setLandmarksToSee(
-      landmarks.filter((landmark) => {
-        for (let i = 0; i < logs.length; i++) {
-          return (
-            landmark.latitude !== Number(logs[i].latitude) &&
-            landmark.longitude !== Number(logs[i].longitude)
-          );
-        }
-      })
-    );
-  }, [logs]);
-
   return (
     <div className="w-full h-screen">
       <MapContainer
@@ -75,12 +53,10 @@ const MapL = ({ logs }: { logs: Log[] }) => {
         // dragging={false}
         // scrollWheelZoom={false}
         // center={position}
+        // minZoom={3}
         zoomControl={false}
         zoom={8}
-        // mapStyle=""
-        // animate={true}
         easeLinearity={0.35}
-        // minZoom={3}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -115,33 +91,22 @@ const MapL = ({ logs }: { logs: Log[] }) => {
             </Popup>
           </Marker>
         ))}
-
-        {landmarksToSee.map((landmark: any) => (
-          <Marker
-            icon={greenIcon}
-            key={landmark.id}
-            position={[Number(landmark.latitude), Number(landmark.longitude)]}
-          >
-            <Popup offset={[0, -27.5]}>
-              <p className="text-lg font-bold text-red-400">{landmark.place}</p>
-              <div className="flex justify-center items-center w-[250px]">
-                <picture>
-                  <img
-                    alt={landmark.id}
-                    src={landmark.image}
-                    className="w-96"
-                  />
-                </picture>
-              </div>
-              <p className="italic font-[spectral] text-lg max-w-[24rem]">
-                {landmark.description.length > 200
-                  ? landmark.description.substring(0, 200) + "..."
-                  : landmark.description}
-              </p>
-            </Popup>
-          </Marker>
-        ))}
       </MapContainer>
+
+      {isOpen ? (
+        <div className="absolute right-0 top-0 z-[999] w-[400px] h-screen bg-black">
+          <LogForm onClose={() => setIsOpen(false)} />
+        </div>
+      ) : (
+        <div className="drawer-content" onClick={() => setIsOpen(true)}>
+          <label
+            className="btn absolute top-2 right-2 z-[997] capitalize text-gray-300"
+            htmlFor="my-drawer"
+          >
+            Add New Logs
+          </label>
+        </div>
+      )}
     </div>
   );
 };

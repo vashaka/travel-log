@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 
 const labelText = "ml-1 text-md text-[#ededed] duration-300";
 const inputClassName =
-  "mt-1 py-2 px-2 rounded-lg md:w-[500px] w-5/6 text-white border border-[#ededed] bg-transparent focus:outline-none duration-300";
+  "mt-1 py-2 px-2 rounded-lg w-[90%] text-white border border-[#ededed] bg-transparent focus:outline-none duration-300";
 
-const LogForm = () => {
+const LogForm = ({ onClose }: { onClose: any }) => {
   const router = useRouter();
   const [form, setForm] = React.useState({
     place: "",
@@ -43,11 +43,28 @@ const LogForm = () => {
 
   return (
     <form className="bg-black h-[100vh] text-white">
+      <div className="absolute right-3 top-5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="white"
+          className="w-6 h-6 cursor-pointer"
+          onClick={onClose}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
       <h1 className="text-2xl text-center font-semibold pt-4">
-        Type the Destinations
+        Type the Destination
       </h1>
       <div className="flex items-center flex-col mt-2">
-        <div className="md:w-[500px] w-5/6 duration-300">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>Place</label>
         </div>
         <input
@@ -59,7 +76,7 @@ const LogForm = () => {
       </div>
 
       <div className="flex items-center flex-col mt-4">
-        <div className="md:w-[500px] w-5/6 duration-300">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>Latitude</label>
         </div>
         <input
@@ -71,7 +88,7 @@ const LogForm = () => {
       </div>
 
       <div className="flex items-center flex-col mt-4">
-        <div className="md:w-[500px] w-5/6 duration-300">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>Longitude</label>
         </div>
         <input
@@ -83,7 +100,7 @@ const LogForm = () => {
       </div>
 
       <div className="flex items-center flex-col mt-4">
-        <div className="md:w-[500px] w-5/6 duration-300">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>Image</label>
         </div>
         <input
@@ -95,18 +112,18 @@ const LogForm = () => {
       </div>
 
       <div className="flex items-center flex-col mt-4">
-        <div className="md:w-[500px] w-5/6 duration-300">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>Date (visited)</label>
         </div>
         <input
           onChange={(e) => setForm({ ...form, visitDate: e.target.value })}
-          className="date duration-300 mt-1 py-2 px-2 rounded-lg md:w-[500px] w-5/6 text-white border border-[#ededed] bg-transparent focus:outline-none"
+          className="date duration-300 mt-1 py-2 px-2 rounded-lg w-[90%] text-white border border-[#ededed] bg-transparent focus:outline-none"
           type="date"
         />
       </div>
 
       <div className="flex items-center flex-col mt-4">
-        <div className="md:w-[500px] w-5/6 duration-300">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>
             Expressions (Tell us about your Expressions)
           </label>
@@ -121,7 +138,7 @@ const LogForm = () => {
         {/* <div className="md:w-[500px] flex justify-end mt-3 mr-1 duration-300 w-5/6"> */}
         <Button
           disabled={!formIsValid}
-          className="h-0 md:w-[500px] w-5/6 duration-300 mt-3 text-lg px-10 py-5 rounded-sm font-semibol"
+          className="h-0 w-[90%] duration-300 mt-3 text-lg px-10 py-5 rounded-sm font-semibol"
           variant="outline"
           onClick={onAdd}
         >

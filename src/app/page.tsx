@@ -1,16 +1,29 @@
-import LogForm from "@/components/LogForm";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import LogSidebar from "@/components/LogSidebar";
+import MapL from "@/components/MapL";
+import { Log } from "@/models/Log";
 
-export default function Home() {
+async function getLogs() {
+  try {
+    const res = await fetch("http://localhost:3000/api/logs", {
+      next: {
+        revalidate: 0,
+      },
+    });
+    const data = res.json();
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default async function Home() {
+  const data: { logs: Log[] } = await getLogs();
+
   return (
-    <>
-      <Link href={"/map"}>
-        <Button variant={"secondary"} className="fixed z-[999] top-4 right-4">
-          Go To Map
-        </Button>
-      </Link>
-      <LogForm />
-    </>
+    <div>
+      <LogSidebar logs={data.logs} />
+      <MapL logs={data.logs} />
+    </div>
   );
 }

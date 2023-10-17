@@ -22,15 +22,3 @@ model Log {
   updatedAt DateTime @updatedAt
 }
 
-model LandmarkToSee {
-  id  String @id @default(auto()) @map("_id") @db.ObjectId
-  place String
-  latitude String
-  longitude String
-  image String
-  distancefromcaptial String
-  description String
-  allreadySeen Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}

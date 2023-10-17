@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import React, { createContext, useContext } from "react";
 
 const ThemeContext = createContext({});
