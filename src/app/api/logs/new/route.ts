@@ -7,11 +7,28 @@ export async function POST(req: Request, res: NextResponse) {
     prisma.$connect();
     const reqBody = await req.json();
 
-    const { place, latitude, longitude, image, visitDate, expression }: Log =
-      reqBody.form;
+    const {
+      place,
+      rating,
+      latitude,
+      longitude,
+      image,
+      visitDate,
+      expression,
+    }: Log = reqBody.form;
+
+    console.log(rating);
 
     const newLog = await prisma.log.create({
-      data: { place, latitude, longitude, image, visitDate, expression },
+      data: {
+        place,
+        rating,
+        latitude,
+        longitude,
+        image,
+        visitDate,
+        expression,
+      },
     });
 
     return NextResponse.json({ log: newLog }, { status: 200 });

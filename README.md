@@ -10,7 +10,7 @@
 
 - [' '] // ADD EDIT FUNCTIONALLITY TO EXISTING LOGS
 
-- [' '] // ADD RATING CRITERIA
+- [' * '] // ADD RATING CRITERIA
 
 ---
 

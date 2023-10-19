@@ -14,10 +14,11 @@ const LogForm = ({
   markerPosition,
 }: {
   onClose: any;
-  markerPosition: { lat: number; lng: number };
+  markerPosition: { lat: number; lng: number } | null;
 }) => {
   const [form, setForm] = React.useState({
     place: "",
+    stars: "",
     latitude: 0,
     longitude: 0,
     image: "",
@@ -26,6 +27,7 @@ const LogForm = ({
   });
 
   React.useEffect(() => {
+    if (markerPosition === null) return;
     setForm({
       ...form,
       latitude: markerPosition.lat,
@@ -88,15 +90,32 @@ const LogForm = ({
 
       <div className="flex items-center flex-col mt-4">
         <div className="w-[90%] duration-300">
+          <label className={labelText}>Stars</label>
+        </div>
+        <input
+          onChange={(e) => {
+            setForm({ ...form, stars: e.target.value });
+          }}
+          placeholder="0"
+          className={inputClassName}
+          maxLength={2}
+          type="string"
+        />
+      </div>
+
+      <div className="flex items-center flex-col mt-4">
+        <div className="w-[90%] duration-300">
           <label className={labelText}>Latitude</label>
         </div>
         <input
-          // onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, latitude: Number(e.target.value) })
+          }
           placeholder="41.716667"
           className={inputClassName}
           type="number"
-          value={form.latitude || 0}
-          readOnly
+          value={form.latitude || ""}
+          // readOnly
         />
       </div>
 
@@ -105,12 +124,14 @@ const LogForm = ({
           <label className={labelText}>Longitude</label>
         </div>
         <input
-          // onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, longitude: Number(e.target.value) })
+          }
           placeholder="44.783333"
           className={inputClassName}
           type="number"
-          value={form.longitude || 0}
-          readOnly
+          value={form.longitude || ""}
+          // readOnly
         />
       </div>
 

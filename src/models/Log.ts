@@ -1,6 +1,7 @@
 export interface Log {
   id: string;
   place: string;
+  rating: string;
   latitude: number;
   longitude: number;
   image: string;

@@ -22,6 +22,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import { Log } from "@/models/Log";
 import { useThemeContext } from "@/context/store";
 import LogForm from "./LogForm";
+import { Button } from "./ui/button";
 
 let DefaultIcon = L.icon({
   iconUrl: icon.src,
@@ -45,7 +46,7 @@ const MapL = ({ logs }: { logs: Log[] }) => {
     _zoom: number;
   }) => {
     const map = useMap();
-    if (position !== null) {
+    if (position !== null && !immediate) {
       map.setView(coords, _zoom, { animate: true, duration: 1.0 });
     }
 
@@ -72,18 +73,25 @@ const MapL = ({ logs }: { logs: Log[] }) => {
     React.useEffect(() => {
       if (position === null) {
         map.invalidateSize();
-        const bounds = new L.LatLngBounds(
-          logs.map((log: { latitude: number; longitude: number }) => [
-            log.latitude,
-            log.longitude,
-          ])
-        );
-        map.fitBounds(bounds);
 
-        if (mPos === null) {
-          setMPos(map.getCenter());
+        if (!immediate) {
+          const bounds = new L.LatLngBounds(
+            logs.map((log: { latitude: number; longitude: number }) => [
+              log.latitude,
+              log.longitude,
+            ])
+          );
+          map.fitBounds(bounds);
+
+          if (mPos === null) {
+            setMPos(map.getCenter());
+          }
+          if (logs.length === 1) {
+            map.setZoom(7);
+          }
         }
       }
+
       // map.setZoom(7);
     }, [logs, map]);
     return null;
@@ -98,9 +106,8 @@ const MapL = ({ logs }: { logs: Log[] }) => {
         // center={position}
         // minZoom={3}
         zoomControl={false}
-        center={position}
-        zoom={8}
-        animation={true}
+        // center={position}
+        // zoom={8}
         easeLinearity={0.35}
       >
         <TileLayer
@@ -111,14 +118,13 @@ const MapL = ({ logs }: { logs: Log[] }) => {
 
         <InitMap logs={logs} />
         <MyComponent coords={position} _zoom={zoom} />
-        {_isOpen && (
+        {immediate && (
           <Marker
             draggable
             icon={greenIcon}
             ref={markerRef}
             position={mPos}
             eventHandlers={eventHandlers}
-            ref={markerRef}
           ></Marker>
         )}
         {logs.map((log: Log) => (
@@ -135,15 +141,26 @@ const MapL = ({ logs }: { logs: Log[] }) => {
                 </picture>
               </div>
               <p className="italic font-[spectral] text-lg max-w-[24rem]">
-                {log.expression.length > 200
+                {log.expression?.length > 200
                   ? log.expression.substring(0, 200) + "..."
                   : log.expression}
               </p>
-              <p className="text-sm italic">
-                {new Date(log.visitDate).toLocaleDateString(undefined, {
-                  timeZone: "UTC",
-                })}
-              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm italic">
+                  {new Date(log.visitDate).toLocaleDateString(undefined, {
+                    timeZone: "UTC",
+                  })}
+                </p>
+
+                <Button
+                  onClick={() => {
+                    setImmediate(true);
+                    _setIsOpen(true);
+                  }}
+                >
+                  Edit
+                </Button>
+              </div>
             </Popup>
           </Marker>
         ))}
@@ -158,6 +175,7 @@ const MapL = ({ logs }: { logs: Log[] }) => {
           <LogForm
             markerPosition={mPos}
             onClose={() => {
+              setMPos(null);
               setImmediate(false);
               setTimeout(() => {
                 _setIsOpen(false);
