@@ -1,29 +1,41 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 const labelText = "ml-1 text-base text-[#ededed] duration-300";
 const inputClassName =
   "mt-1 py-2 px-2 rounded-lg w-[90%] text-white border border-[#ededed] bg-transparent focus:outline-none duration-300";
 
-const LogForm = ({ onClose }: { onClose: any }) => {
-  const router = useRouter();
+const LogForm = ({
+  onClose,
+  markerPosition,
+}: {
+  onClose: any;
+  markerPosition: { lat: number; lng: number };
+}) => {
   const [form, setForm] = React.useState({
     place: "",
-    latitude: "",
-    longitude: "",
+    latitude: 0,
+    longitude: 0,
     image: "",
     visitDate: "",
     expression: "",
   });
+
+  React.useEffect(() => {
+    setForm({
+      ...form,
+      latitude: markerPosition.lat,
+      longitude: markerPosition.lng,
+    });
+  }, [markerPosition]);
+
   const formIsValid =
     form.place.length > 0 &&
     form.image.length > 0 &&
-    form.latitude.length > 0 &&
-    form.longitude.length > 0 &&
     form.visitDate.length > 0 &&
     form.expression.length > 0;
 
@@ -34,8 +46,7 @@ const LogForm = ({ onClose }: { onClose: any }) => {
         form,
       });
 
-      // router.push("/map");
-      window.location.href = "/map";
+      window.location.href = "/";
     } catch (error) {
       console.log(error);
     }
@@ -80,10 +91,12 @@ const LogForm = ({ onClose }: { onClose: any }) => {
           <label className={labelText}>Latitude</label>
         </div>
         <input
-          onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+          // onChange={(e) => setForm({ ...form, latitude: e.target.value })}
           placeholder="41.716667"
           className={inputClassName}
-          type="text"
+          type="number"
+          value={form.latitude || 0}
+          readOnly
         />
       </div>
 
@@ -92,10 +105,12 @@ const LogForm = ({ onClose }: { onClose: any }) => {
           <label className={labelText}>Longitude</label>
         </div>
         <input
-          onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+          // onChange={(e) => setForm({ ...form, longitude: e.target.value })}
           placeholder="44.783333"
           className={inputClassName}
-          type="text"
+          type="number"
+          value={form.longitude || 0}
+          readOnly
         />
       </div>
 
@@ -137,7 +152,6 @@ const LogForm = ({ onClose }: { onClose: any }) => {
           cols={50}
           placeholder="After long time of waiting i finnaly went to Tbilisi ..."
         ></textarea>
-        {/* <div className="md:w-[500px] flex justify-end mt-3 mr-1 duration-300 w-5/6"> */}
         <Button
           disabled={!formIsValid}
           className="h-0 w-[90%] duration-300 mt-3 text-lg px-10 py-5 rounded-sm font-semibol"
@@ -146,7 +160,6 @@ const LogForm = ({ onClose }: { onClose: any }) => {
         >
           Submit
         </Button>
-        {/* </div> */}
       </div>
     </form>
   );

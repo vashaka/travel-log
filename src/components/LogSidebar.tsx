@@ -57,7 +57,7 @@ const LogSidebar = ({ logs }: { logs: any[] }) => {
                       Number(log.latitude),
                       Number(log.longitude),
                     ]);
-                    onZoomChange(10);
+                    onZoomChange(8);
                   }}
                 >
                   <div className="collapse collapse-arrow bg-base-100 mt-3">

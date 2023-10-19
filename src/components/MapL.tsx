@@ -1,21 +1,21 @@
-// var greenIcon = new L.Icon({
-//   iconUrl:
-//     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
-//   shadowUrl:
-//     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-//   iconSize: [25, 41],
-//   iconAnchor: [12, 41],
-//   shadowSize: [41, 41],
-// });
-// L.Marker.prototype.options.icon = DefaultIcon;
 "use client";
+var greenIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  shadowSize: [41, 41],
+});
+// L.Marker.prototype.options.icon = DefaultIcon;
 
-import React from "react";
+import React, { useRef } from "react";
 import "leaflet/dist/leaflet.css";
 
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
-import L, { LatLngTuple } from "leaflet";
+import L, { LatLngTuple, bounds } from "leaflet";
 
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -31,6 +31,8 @@ let DefaultIcon = L.icon({
 });
 
 const MapL = ({ logs }: { logs: Log[] }) => {
+  const [mPos, setMPos] = React.useState(null);
+
   const [immediate, setImmediate] = React.useState(false);
   const [_isOpen, _setIsOpen] = React.useState(false);
   const { position, zoom }: any = useThemeContext();
@@ -43,7 +45,47 @@ const MapL = ({ logs }: { logs: Log[] }) => {
     _zoom: number;
   }) => {
     const map = useMap();
-    map.setView(coords, _zoom, { animate: true, duration: 1.0 });
+    if (position !== null) {
+      map.setView(coords, _zoom, { animate: true, duration: 1.0 });
+    }
+
+    return null;
+  };
+
+  const markerRef = useRef(null);
+
+  const eventHandlers = React.useMemo(
+    () => ({
+      dragend() {
+        const marker: any = markerRef.current;
+        if (marker != null) {
+          setMPos(marker.getLatLng());
+        }
+      },
+    }),
+    []
+  );
+
+  const InitMap = ({ logs }: { logs: any }) => {
+    const map = useMap();
+
+    React.useEffect(() => {
+      if (position === null) {
+        map.invalidateSize();
+        const bounds = new L.LatLngBounds(
+          logs.map((log: { latitude: number; longitude: number }) => [
+            log.latitude,
+            log.longitude,
+          ])
+        );
+        map.fitBounds(bounds);
+
+        if (mPos === null) {
+          setMPos(map.getCenter());
+        }
+      }
+      // map.setZoom(7);
+    }, [logs, map]);
     return null;
   };
 
@@ -56,7 +98,9 @@ const MapL = ({ logs }: { logs: Log[] }) => {
         // center={position}
         // minZoom={3}
         zoomControl={false}
+        center={position}
         zoom={8}
+        animation={true}
         easeLinearity={0.35}
       >
         <TileLayer
@@ -65,7 +109,18 @@ const MapL = ({ logs }: { logs: Log[] }) => {
           // url={"https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"}
         />
 
+        <InitMap logs={logs} />
         <MyComponent coords={position} _zoom={zoom} />
+        {_isOpen && (
+          <Marker
+            draggable
+            icon={greenIcon}
+            ref={markerRef}
+            position={mPos}
+            eventHandlers={eventHandlers}
+            ref={markerRef}
+          ></Marker>
+        )}
         {logs.map((log: Log) => (
           <Marker
             icon={DefaultIcon}
@@ -101,6 +156,7 @@ const MapL = ({ logs }: { logs: Log[] }) => {
           }`}
         >
           <LogForm
+            markerPosition={mPos}
             onClose={() => {
               setImmediate(false);
               setTimeout(() => {

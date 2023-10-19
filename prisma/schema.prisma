@@ -13,8 +13,8 @@ datasource db {
 model Log {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   place String
-  latitude String
-  longitude String
+  latitude Float
+  longitude Float
   image String
   visitDate String
   expression String
