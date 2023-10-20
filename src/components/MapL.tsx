@@ -89,6 +89,7 @@ const MapL = ({ logs }: { logs: Log[] }) => {
           if (logs.length === 1) {
             map.setZoom(7);
           }
+          // map.setZoom(map.getZoom() - 1);
         }
       }
 

@@ -18,7 +18,7 @@ const LogForm = ({
 }) => {
   const [form, setForm] = React.useState({
     place: "",
-    stars: "",
+    rating: "",
     latitude: 0,
     longitude: 0,
     image: "",
@@ -94,7 +94,7 @@ const LogForm = ({
         </div>
         <input
           onChange={(e) => {
-            setForm({ ...form, stars: e.target.value });
+            setForm({ ...form, rating: e.target.value });
           }}
           placeholder="0"
           className={inputClassName}
