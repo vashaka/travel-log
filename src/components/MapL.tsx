@@ -15,7 +15,7 @@ import "leaflet/dist/leaflet.css";
 
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
-import L, { LatLngTuple, bounds } from "leaflet";
+import L, { LatLng, LatLngTuple } from "leaflet";
 
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -23,6 +23,7 @@ import { Log } from "@/models/Log";
 import { useThemeContext } from "@/context/store";
 import LogForm from "./LogForm";
 import { Button } from "./ui/button";
+import axios from "axios";
 
 let DefaultIcon = L.icon({
   iconUrl: icon.src,
@@ -32,11 +33,13 @@ let DefaultIcon = L.icon({
 });
 
 const MapL = ({ logs }: { logs: Log[] }) => {
-  const [mPos, setMPos] = React.useState(null);
+  const [mPos, setMPos] = React.useState<any | null>(null);
+  const [id, setId] = React.useState<string | undefined>("");
 
   const [immediate, setImmediate] = React.useState(false);
   const [_isOpen, _setIsOpen] = React.useState(false);
   const { position, zoom }: any = useThemeContext();
+  const [formToEdit, setFormToEdit] = React.useState<Log | null>(null);
 
   const MyComponent = ({
     coords,
@@ -102,14 +105,9 @@ const MapL = ({ logs }: { logs: Log[] }) => {
     <div className="w-full h-screen">
       <MapContainer
         className="w-full h-full"
-        // dragging={false}
-        // scrollWheelZoom={false}
-        // center={position}
-        // minZoom={3}
         zoomControl={false}
-        // center={position}
-        // zoom={8}
         easeLinearity={0.35}
+        minZoom={2}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -155,8 +153,28 @@ const MapL = ({ logs }: { logs: Log[] }) => {
 
                 <Button
                   onClick={() => {
-                    setImmediate(true);
-                    _setIsOpen(true);
+                    _setIsOpen(false);
+                    _setIsOpen(false);
+                    setId(log.id);
+                    axios
+                      .post(`http://localhost:3000/api/logs/edit/${log?.id}`, {
+                        place: log.place,
+                        rating: log.rating,
+                        latitude: log.latitude,
+                        longitude: log.longitude,
+                        image: log.image,
+                        visitDate: log.visitDate,
+                        expression: log.expression,
+                      })
+                      .then((resp) => {
+                        setMPos({
+                          lat: Number(resp.data.form.latitude),
+                          lng: Number(resp.data.form.longitude),
+                        });
+                        setFormToEdit(resp.data.form);
+                        setImmediate(true);
+                        _setIsOpen(true);
+                      });
                   }}
                 >
                   Edit
@@ -174,8 +192,11 @@ const MapL = ({ logs }: { logs: Log[] }) => {
           }`}
         >
           <LogForm
+            id={id}
+            formToEdit={formToEdit}
             markerPosition={mPos}
             onClose={() => {
+              setFormToEdit(null);
               setMPos(null);
               setImmediate(false);
               setTimeout(() => {

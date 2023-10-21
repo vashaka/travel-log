@@ -1,5 +1,5 @@
 export interface Log {
-  id: string;
+  id?: string;
   place: string;
   rating: string;
   latitude: number;
@@ -7,6 +7,6 @@ export interface Log {
   image: string;
   visitDate: string;
   expression: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
+import { Log } from "@/models/Log";
 
 const labelText = "ml-1 text-base text-[#ededed] duration-300";
 const inputClassName =
@@ -12,18 +13,22 @@ const inputClassName =
 const LogForm = ({
   onClose,
   markerPosition,
+  formToEdit,
+  id,
 }: {
-  onClose: any;
+  onClose: MouseEventHandler<SVGSVGElement> | undefined;
   markerPosition: { lat: number; lng: number } | null;
+  formToEdit: Log | null;
+  id: string | undefined;
 }) => {
   const [form, setForm] = React.useState({
-    place: "",
-    rating: "",
-    latitude: 0,
-    longitude: 0,
-    image: "",
-    visitDate: "",
-    expression: "",
+    place: formToEdit?.place || "",
+    rating: formToEdit?.rating || "",
+    latitude: formToEdit?.latitude || "",
+    longitude: formToEdit?.longitude || "",
+    image: formToEdit?.image || "",
+    visitDate: formToEdit?.visitDate || "",
+    expression: formToEdit?.expression || "",
   });
 
   React.useEffect(() => {
@@ -43,12 +48,31 @@ const LogForm = ({
 
   const onAdd = async (e: any) => {
     try {
-      e.preventDefault();
-      await axios.post("http://localhost:3000/api/logs/new", {
-        form,
-      });
+      if (id) {
+        e.preventDefault();
 
-      window.location.href = "/";
+        let inc = await axios.post(
+          `http://localhost:3000/api/logs/edit/${id}`,
+          {
+            place: form.place,
+            rating: form.rating,
+            latitude: form.latitude,
+            longitude: form.longitude,
+            image: form.image,
+            visitDate: form.visitDate,
+            expression: form.expression,
+          }
+        );
+
+        window.location.href = "/";
+      } else {
+        e.preventDefault();
+        await axios.post("http://localhost:3000/api/logs/new", {
+          form,
+        });
+
+        window.location.href = "/";
+      }
     } catch (error) {
       console.log(error);
     }
@@ -85,6 +109,7 @@ const LogForm = ({
           onChange={(e) => setForm({ ...form, place: e.target.value })}
           className={inputClassName}
           type="text"
+          value={form.place}
         />
       </div>
 
@@ -100,6 +125,7 @@ const LogForm = ({
           className={inputClassName}
           maxLength={2}
           type="string"
+          value={form.rating}
         />
       </div>
 
@@ -114,8 +140,7 @@ const LogForm = ({
           placeholder="41.716667"
           className={inputClassName}
           type="number"
-          value={form.latitude || ""}
-          // readOnly
+          value={form.latitude}
         />
       </div>
 
@@ -130,8 +155,7 @@ const LogForm = ({
           placeholder="44.783333"
           className={inputClassName}
           type="number"
-          value={form.longitude || ""}
-          // readOnly
+          value={form.longitude}
         />
       </div>
 
@@ -144,6 +168,7 @@ const LogForm = ({
           placeholder="*.png, *.jpg, *.*"
           className={inputClassName}
           type="text"
+          value={form.image}
         />
       </div>
 
@@ -155,6 +180,7 @@ const LogForm = ({
           onChange={(e) => setForm({ ...form, visitDate: e.target.value })}
           className="date duration-300 mt-1 py-2 px-2 rounded-lg w-[90%] text-white border border-[#ededed] bg-transparent focus:outline-none"
           type="date"
+          value={form.visitDate}
         />
       </div>
 
@@ -172,6 +198,7 @@ const LogForm = ({
           rows={5}
           cols={50}
           placeholder="After long time of waiting i finnaly went to Tbilisi ..."
+          value={form.expression}
         ></textarea>
         <Button
           disabled={!formIsValid}
