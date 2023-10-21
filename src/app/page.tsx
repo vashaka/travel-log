@@ -1,6 +1,7 @@
 import LogSidebar from "@/components/LogSidebar";
 import MapL from "@/components/MapL";
 import { Log } from "@/models/Log";
+import prisma from "../../prisma";
 
 async function getLogs() {
   try {

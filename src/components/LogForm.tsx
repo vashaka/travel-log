@@ -46,23 +46,30 @@ const LogForm = ({
     form.visitDate.length > 0 &&
     form.expression.length > 0;
 
+  const onDelete = async (e: any) => {
+    try {
+      e.preventDefault();
+      await axios.post(`http://localhost:3000/api/logs/delete/${id}`);
+      window.location.href = "/";
+    } catch (error: any) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
+
   const onAdd = async (e: any) => {
     try {
       if (id) {
         e.preventDefault();
-
-        let inc = await axios.post(
-          `http://localhost:3000/api/logs/edit/${id}`,
-          {
-            place: form.place,
-            rating: form.rating,
-            latitude: form.latitude,
-            longitude: form.longitude,
-            image: form.image,
-            visitDate: form.visitDate,
-            expression: form.expression,
-          }
-        );
+        await axios.post(`http://localhost:3000/api/logs/edit/${id}`, {
+          place: form.place,
+          rating: form.rating,
+          latitude: form.latitude,
+          longitude: form.longitude,
+          image: form.image,
+          visitDate: form.visitDate,
+          expression: form.expression,
+        });
 
         window.location.href = "/";
       } else {
@@ -140,7 +147,7 @@ const LogForm = ({
           placeholder="41.716667"
           className={inputClassName}
           type="number"
-          value={form.latitude}
+          value={form.latitude || ""}
         />
       </div>
 
@@ -155,7 +162,7 @@ const LogForm = ({
           placeholder="44.783333"
           className={inputClassName}
           type="number"
-          value={form.longitude}
+          value={form.longitude || ""}
         />
       </div>
 
@@ -200,14 +207,39 @@ const LogForm = ({
           placeholder="After long time of waiting i finnaly went to Tbilisi ..."
           value={form.expression}
         ></textarea>
-        <Button
-          disabled={!formIsValid}
-          className="h-0 w-[90%] duration-300 mt-3 text-lg px-10 py-5 rounded-sm font-semibol"
-          variant="outline"
-          onClick={onAdd}
-        >
-          Submit
-        </Button>
+
+        {formToEdit ? (
+          <div>
+            <Button
+              className="h-0 w-[45%] mr-1 duration-300 mt-3 text-lg px-10 py-[1.3rem] rounded-sm font-semibol"
+              variant="destructive"
+              onClick={onDelete}
+            >
+              Delete
+            </Button>
+            <Button
+              disabled={!formIsValid}
+              className={`h-0 ${
+                formToEdit ? "w-[45%]" : "w-[90%]"
+              } ml-1 duration-300 mt-3 text-lg px-10 py-5 rounded-sm font-semibol`}
+              variant="outline"
+              onClick={onAdd}
+            >
+              Edit
+            </Button>
+          </div>
+        ) : (
+          <Button
+            disabled={!formIsValid}
+            className={`h-0 ${
+              formToEdit ? "w-[45%]" : "w-[90%]"
+            } ml-1 duration-300 mt-3 text-lg px-10 py-5 rounded-sm font-semibol`}
+            variant="outline"
+            onClick={onAdd}
+          >
+            Submit
+          </Button>
+        )}
       </div>
     </form>
   );
