@@ -19,12 +19,12 @@ async function getLogs() {
 }
 
 export default async function Home() {
-  const data: { logs: Log[] } = await getLogs();
+  const data = await prisma.log.findMany({});
 
   return (
     <div>
-      <LogSidebar logs={data.logs} />
-      <MapL logs={data.logs} />
+      <LogSidebar logs={data} />
+      <MapL logs={data} />
     </div>
   );
 }

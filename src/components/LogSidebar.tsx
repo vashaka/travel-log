@@ -44,7 +44,7 @@ const LogSidebar = ({ logs }: { logs: any[] }) => {
               </div>
             </label>
             <h1 className="text-white text-center text-xl font-bold">
-              My Logs
+              My Logs ({logs.length})
             </h1>
             {/* Sidebar content here */}
             <div className="flex mt-4 justify-center flex-col items-center">

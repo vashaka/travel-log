@@ -5,6 +5,7 @@ import React, { MouseEventHandler } from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { Log } from "@/models/Log";
+import { useRouter } from "next/navigation";
 
 const labelText = "ml-1 text-base text-[#ededed] duration-300";
 const inputClassName =
@@ -21,6 +22,7 @@ const LogForm = ({
   formToEdit: Log | null;
   id: string | undefined;
 }) => {
+  const router = useRouter();
   const [form, setForm] = React.useState({
     place: formToEdit?.place || "",
     rating: formToEdit?.rating || "",
@@ -41,10 +43,11 @@ const LogForm = ({
   }, [markerPosition]);
 
   const formIsValid =
-    form.place.length > 0 &&
-    form.image.length > 0 &&
+    form.place.trim().length > 0 &&
+    form.image.trim().length > 0 &&
+    form.rating.trim().length > 0 &&
     form.visitDate.length > 0 &&
-    form.expression.length > 0;
+    form.expression.trim().length > 0;
 
   const onDelete = async (e: any) => {
     try {
@@ -126,13 +129,14 @@ const LogForm = ({
         </div>
         <input
           onChange={(e) => {
+            if (isNaN(Number(e.target.value))) return;
             setForm({ ...form, rating: e.target.value });
           }}
           placeholder="0"
           className={inputClassName}
           maxLength={2}
-          type="string"
-          value={form.rating}
+          type="text"
+          value={form.rating || ""}
         />
       </div>
 

@@ -32,7 +32,7 @@ let DefaultIcon = L.icon({
   iconAnchor: [25 / 2, 41],
 });
 
-const MapL = ({ logs }: { logs: Log[] }) => {
+const MapL = ({ logs }: { logs: any[] }) => {
   const [mPos, setMPos] = React.useState<any | null>(null);
   const [id, setId] = React.useState<string | undefined>("");
 
